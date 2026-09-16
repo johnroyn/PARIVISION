@@ -7,8 +7,8 @@ export default function Member2() {
   // Static profile data for the Position 2 (Midlaner) roster member
   const player = {
     tag: "DOTA 2",
-    ign: "SHADOWFLUX",
-    realName: "Marcus \"Shadowflux\" Reyes",
+    ign: "Chanix",
+    realName: "Rod Christian M. \"Chanix\" Mojado",
     position: "Position 2",
     role: role ?? "Midlaner",
     desc: "Controls the tempo and ganks lanes.",
