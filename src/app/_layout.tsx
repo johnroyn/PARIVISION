@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import { Stack } from "expo-router";
-
-export default function RootLayout() {
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-    </Stack>
-=======
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
@@ -30,6 +21,5 @@ export default function RootLayout() {
         <Stack.Screen name="member6" />
       </Stack>
     </ThemeProvider>
->>>>>>> 7c9249d161628b965147dd0380b39c2095dce8d9
   );
 }
