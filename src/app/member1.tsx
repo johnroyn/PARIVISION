@@ -33,7 +33,7 @@ export default function Member1Profile() {
       <View style={styles.detailsBox}>
         <Text style={styles.sectionTitle}>HOBBIES & INTERESTS</Text>
 
-        <Text style={styles.itemTitle}>♡ BIO:</Text>
+        <Text style={styles.itemTitle}>♡ gBIO:</Text>
         <Text style={styles.itemDetail}>
           As the Kingdom's number one knight, my sword, loyalty, and life belong
           entirely to you, Lady Anastasia, and I will remain your faithful
