@@ -90,7 +90,7 @@ _(Change `pos2` to whatever name you chose in Step 2)._
 
 ---
 
-## 👑 PART 3: How Team Leader John Combines the Pages Together
+## OKAY PART 3: How Team Leader John Combines the Pages Together
 
 Once a teammate pushes their bubble up to GitHub, their code is safe online, but it isn't connected to the main app dashboard yet. John (The Leader) must combine them on the website:
 
@@ -103,7 +103,7 @@ Once a teammate pushes their bubble up to GitHub, their code is safe online, but
 
 Tell the rest of the team to run `git checkout main` and `git pull origin main` on their computers, and your teammate's new profile card will magically show up on their screens too!
 =======
-# Welcome to your Expo app 👋
+# Welcome to your Expo app hehe
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
