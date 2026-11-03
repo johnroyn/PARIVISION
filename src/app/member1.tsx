@@ -10,16 +10,11 @@ import {
   TextInput,
   View,
 } from "react-native";
-
-type MemberProfile = {
-  id: string;
-  name: string;
-  role: string;
-  tagline: string;
-  bio: string;
-  game: string;
-  leisure: string;
-};
+import {
+  fetchMemberProfile,
+  MEMBER_API_BASE_URL,
+  type MemberProfile,
+} from "@/utils/member-api";
 
 // Updated with Member1's static info as the default baseline attributes
 const defaultProfile: MemberProfile = {
@@ -32,8 +27,6 @@ const defaultProfile: MemberProfile = {
   game: "Dota 2, CS2, and Chess",
   leisure: "I enjoy reading novel while lying down doing absolutely nothing.",
 };
-
-const API_BASE_URL = "";
 
 export default function MemberProfileViewer() {
   const { memberId: routeMemberId } = useLocalSearchParams<{
@@ -55,7 +48,7 @@ export default function MemberProfileViewer() {
 
   // Data Fetching Lifecycle
   useEffect(() => {
-    if (!API_BASE_URL) return;
+    if (!MEMBER_API_BASE_URL) return;
 
     const controller = new AbortController();
 
@@ -64,41 +57,19 @@ export default function MemberProfileViewer() {
       setError("");
 
       try {
-        const cleanBaseUrl = API_BASE_URL.replace(/\/$/, "");
-        const response = await fetch(
-          `${cleanBaseUrl}/members/${encodeURIComponent(requestedId)}`,
-          {
-            method: "GET",
-            headers: { Accept: "application/json" },
-            signal: controller.signal,
-          },
+        const nextProfile = await fetchMemberProfile(
+          requestedId,
+          defaultProfile,
+          controller.signal,
         );
-
-        if (!response.ok)
-          throw new Error(`Server returned error status: ${response.status}`);
-
-        const data = await response.json();
-        const member = data.member ?? data.profile ?? data;
-
-        if (!member || typeof member !== "object" || Array.isArray(member)) {
-          throw new Error("Invalid profile payload structure received.");
-        }
-
-        const nextProfile: MemberProfile = {
-          id: String(member.id ?? requestedId),
-          name: member.name || defaultProfile.name,
-          role: member.role || defaultProfile.role,
-          tagline: member.tagline || defaultProfile.tagline,
-          bio: member.bio || defaultProfile.bio,
-          game: member.game || defaultProfile.game,
-          leisure: member.leisure || defaultProfile.leisure,
-        };
-
         setProfile(nextProfile);
         setBio(nextProfile.bio);
-      } catch (requestError: any) {
-        if (requestError.name !== "AbortError") {
-          setError(requestError.message || "Something went wrong.");
+      } catch (requestError) {
+        if (
+          requestError instanceof Error &&
+          requestError.name !== "AbortError"
+        ) {
+          setError(requestError.message);
         }
       } finally {
         if (!controller.signal.aborted) {

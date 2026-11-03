@@ -12,7 +12,8 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="index" />
+        <Stack.Screen name="explore" />
         <Stack.Screen name="member1" />
         <Stack.Screen name="member2" />
         <Stack.Screen name="member3" />

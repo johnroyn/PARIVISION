@@ -1,5 +1,11 @@
 import { Link } from "expo-router";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  fetchMemberProfile,
+  MEMBER_API_BASE_URL,
+  type MemberProfile,
+} from "@/utils/member-api";
 
 const roles = [
   {
@@ -44,9 +50,62 @@ const roles = [
     desc: "Shapes strategy and reads the game.",
     route: "/member6",
   },
-];
+] as const;
+
+type MemberProfiles = Record<string, MemberProfile>;
 
 export default function Index() {
+  const [profiles, setProfiles] = useState<MemberProfiles>({});
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!MEMBER_API_BASE_URL) return;
+
+    const controller = new AbortController();
+
+    async function loadProfiles() {
+      setError("");
+
+      try {
+        const nextProfiles = await Promise.all(
+          roles.map((role) =>
+            fetchMemberProfile(
+              role.id,
+              {
+                id: role.id,
+                name: `Member ${role.id}`,
+                role: role.name,
+                tagline: "",
+                bio: "",
+                game: "",
+                leisure: "",
+              },
+              controller.signal
+            )
+          )
+        );
+
+        if (!controller.signal.aborted) {
+          setProfiles(
+            Object.fromEntries(
+              roles.map((role, index) => [role.id, nextProfiles[index]])
+            )
+          );
+        }
+      } catch (requestError) {
+        if (
+          requestError instanceof Error &&
+          requestError.name !== "AbortError"
+        ) {
+          setError(requestError.message);
+        }
+      }
+    }
+
+    loadProfiles();
+    return () => controller.abort();
+  }, []);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.logoCircle}>
@@ -57,6 +116,7 @@ export default function Index() {
         A competitive Dota 2 team built around patience, precision, and powerful
         late-game decisions.
       </Text>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <View style={styles.sectionRow}>
         <Text style={styles.sectionHeader}>TEAM ROLES</Text>
         <Text style={styles.sectionCount}>06 MEMBERS</Text>
@@ -69,8 +129,11 @@ export default function Index() {
             </View>
             <Text style={styles.cardTitle}>{role.title}</Text>
             <Text style={styles.cardSubtitle}>{role.name}</Text>
+            {profiles[role.id] ? (
+              <Text style={styles.memberName}>{profiles[role.id].name}</Text>
+            ) : null}
             <Text style={styles.cardDesc}>{role.desc}</Text>
-            <Link href={role.route as any} style={styles.cardButton}>
+            <Link href={role.route} style={styles.cardButton}>
               <Text style={styles.cardButtonText}>VIEW PROFILE</Text>
             </Link>
           </View>
@@ -109,6 +172,12 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     paddingHorizontal: 15,
     marginBottom: 35,
+  },
+  errorText: {
+    color: "#E53E3E",
+    fontSize: 12,
+    marginBottom: 16,
+    textAlign: "center",
   },
   sectionRow: {
     width: "100%",
@@ -159,6 +228,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     marginTop: 2,
+    marginBottom: 6,
+  },
+  memberName: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontWeight: "600",
     marginBottom: 6,
   },
   cardDesc: {

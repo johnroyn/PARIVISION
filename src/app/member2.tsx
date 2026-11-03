@@ -8,16 +8,11 @@ import {
   TextInput,
   View,
 } from "react-native";
-
-type MemberProfile = {
-  id: string;
-  name: string;
-  role: string;
-  tagline: string;
-  bio: string;
-  game: string;
-  leisure: string;
-};
+import {
+  fetchMemberProfile,
+  MEMBER_API_BASE_URL,
+  type MemberProfile,
+} from "@/utils/member-api";
 
 const defaultProfile: MemberProfile = {
   id: "2",
@@ -47,8 +42,6 @@ const defaultProfile: MemberProfile = {
     }
   }
 */
-const API_BASE_URL = "";
-
 export default function Member2Profile() {
   const { memberId: routeMemberId } = useLocalSearchParams<{
     memberId?: string | string[];
@@ -69,7 +62,7 @@ export default function Member2Profile() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!API_BASE_URL) return;
+    if (!MEMBER_API_BASE_URL) return;
 
     const controller = new AbortController();
 
@@ -78,51 +71,11 @@ export default function Member2Profile() {
       setError("");
 
       try {
-        const baseUrl = API_BASE_URL.replace(/\/$/, "");
-        const response = await fetch(
-          `${baseUrl}/members/${encodeURIComponent(requestedId)}`,
-          {
-            method: "GET",
-            headers: { Accept: "application/json" },
-            signal: controller.signal,
-          }
+        const nextProfile = await fetchMemberProfile(
+          requestedId,
+          defaultProfile,
+          controller.signal
         );
-
-        if (!response.ok) {
-          throw new Error(`Request failed (${response.status})`);
-        }
-
-        const data = await response.json();
-        const member = data.member ?? data.profile ?? data;
-
-        if (!member || typeof member !== "object" || Array.isArray(member)) {
-          throw new Error("The API returned an invalid profile.");
-        }
-
-        const nextProfile: MemberProfile = {
-          id: String(member.id ?? requestedId),
-          name:
-            typeof member.name === "string"
-              ? member.name
-              : defaultProfile.name,
-          role:
-            typeof member.role === "string"
-              ? member.role
-              : defaultProfile.role,
-          tagline:
-            typeof member.tagline === "string"
-              ? member.tagline
-              : defaultProfile.tagline,
-          bio:
-            typeof member.bio === "string" ? member.bio : defaultProfile.bio,
-          game:
-            typeof member.game === "string" ? member.game : defaultProfile.game,
-          leisure:
-            typeof member.leisure === "string"
-              ? member.leisure
-              : defaultProfile.leisure,
-        };
-
         setProfile(nextProfile);
         setBio(nextProfile.bio);
       } catch (requestError) {
