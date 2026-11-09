@@ -24,7 +24,7 @@ const defaultProfile: MemberProfile = {
   tagline:
     "Leader of PARIVISION, I am a strategic and patient player who thrives in high-pressure situations.",
   bio: "My role as a carry allows me to farm gold efficiently and make decisive plays that can turn the tide of the game. I am committed to leading my team to victory through careful planning, precise execution, and unwavering dedication to our shared goals.",
-  game: "Dota 2, CS2, and Chess",
+  game: "Dota 2, H, CS2, and Chess",
   leisure: "I enjoy reading novel while lying down doing absolutely nothing.",
 };
 
