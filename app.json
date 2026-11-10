@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "PARIVISION_APP",
-    "slug": "PARIVISION_APP",
+    "name": "SPK 58",
+    "slug": "spk-58",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "parivisionapp",
+    "scheme": "spk58",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"

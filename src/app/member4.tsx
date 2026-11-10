@@ -2,12 +2,10 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import {
@@ -42,7 +40,6 @@ export default function MemberProfileViewer() {
     ...defaultProfile,
     id: requestedId,
   });
-  const [bio, setBio] = useState(defaultProfile.bio);
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -64,7 +61,6 @@ export default function MemberProfileViewer() {
           controller.signal,
         );
         setProfile(nextProfile);
-        setBio(nextProfile.bio);
       } catch (requestError) {
         if (
           requestError instanceof Error &&
@@ -86,11 +82,6 @@ export default function MemberProfileViewer() {
   // Handler functions
   const toggleFavorite = () => {
     setIsFavorite((prev) => !prev);
-  };
-  
-  const handleSaveBio = () => {
-    Alert.alert("Success", "Bio changes saved locally!");
-    setProfile((prev) => ({ ...prev, bio }));
   };
   
   return (
@@ -134,19 +125,8 @@ export default function MemberProfileViewer() {
         <Text style={styles.itemTitle}>📖 Leisure Activities:</Text>
         <Text style={styles.itemDetail}>{profile.leisure}</Text>
 
-        <Text style={styles.itemTitle}>📝 Edit Profile Bio:</Text>
-        <TextInput
-          style={styles.bioInput}
-          value={bio}
-          onChangeText={setBio}
-          multiline
-          placeholder="Update profile biography description..."
-          placeholderTextColor="#555"
-        />
-
-        <Pressable style={styles.saveButton} onPress={handleSaveBio}>
-          <Text style={styles.saveButtonText}>SAVE CHANGES</Text>
-        </Pressable>
+        <Text style={styles.itemTitle}>📝 Profile Bio:</Text>
+        <Text style={styles.itemDetail}>{profile.bio}</Text>
       </View>
     </ScrollView>
   );
