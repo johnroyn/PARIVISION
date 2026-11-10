@@ -1,7 +1,6 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -78,46 +77,37 @@ export default function MemberProfileViewer() {
     return () => controller.abort();
   }, [requestedId]);
 
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-  };
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Link href="/" style={styles.backButton}>
         <Text style={styles.backButtonText}>⬅️ BACK TO DASHBOARD</Text>
       </Link>
 
-      {loading && (
-        <ActivityIndicator size="large" color="#E53E3E" style={styles.loader} />
-      )}
-      {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
-
       <View style={styles.profileCard}>
         <Pressable
-          style={[styles.tagBox, isFavorite && styles.tagBoxActive]}
-          onPress={toggleFavorite}
+          style={styles.tagBox}
+          onPress={() => setIsFavorite((current) => !current)}
           accessibilityRole="button"
-          accessibilityLabel="Toggle Favorite status"
+          accessibilityLabel={
+            isFavorite ? "Remove member from favorites" : "Favorite this member"
+          }
         >
           <Text style={styles.tagText}>
-            {isFavorite ? "⭐ FAVORITE" : "☆ MARK FAVORITE"}
+            {isFavorite ? "★ FAVORITE · " : ""}
+            POSITION {profile.id}
           </Text>
         </Pressable>
 
         <Text style={styles.nameText}>{profile.name}</Text>
         <Text style={styles.roleText}>{profile.role}</Text>
-        <Text style={styles.taglineText}>"{profile.tagline}"</Text>
+
+        <Text style={styles.bioText}>{profile.tagline}</Text>
+        {loading ? <Text style={styles.bioText}>Loading profile...</Text> : null}
+        {error ? <Text style={styles.bioText}>{error}</Text> : null}
       </View>
 
       <View style={styles.detailsBox}>
-        <Text style={styles.sectionTitle}>BIO & PREFERENCES</Text>
-
-        <Text style={styles.itemTitle}>🎮 Main Game:</Text>
-        <Text style={styles.itemDetail}>{profile.game}</Text>
-
-        <Text style={styles.itemTitle}>📖 Leisure Activities:</Text>
-        <Text style={styles.itemDetail}>{profile.leisure}</Text>
+        <Text style={styles.sectionTitle}>HOBBIES &amp; INTERESTS</Text>
 
         <Text style={styles.itemTitle}>♡ BIO:</Text>
         <TextInput
@@ -128,6 +118,12 @@ export default function MemberProfileViewer() {
           placeholder="Write a short bio"
           accessibilityLabel="Edit bio"
         />
+
+        <Text style={styles.itemTitle}>🎮 Games I Play:</Text>
+        <Text style={styles.itemDetail}>{profile.game}</Text>
+
+        <Text style={styles.itemTitle}>📖 Leisure:</Text>
+        <Text style={styles.itemDetail}>{profile.leisure}</Text>
       </View>
     </ScrollView>
   );
@@ -152,16 +148,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 1,
   },
-  loader: {
-    marginBottom: 16,
-  },
-  errorText: {
-    color: "#E53E3E",
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 16,
-    fontWeight: "600",
-  },
   profileCard: {
     backgroundColor: "#1C1C1E",
     padding: 24,
@@ -172,20 +158,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   tagBox: {
-    backgroundColor: "#2C2C2E",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    marginBottom: 16,
-  },
-  tagBoxActive: {
     backgroundColor: "#E53E3E",
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    marginBottom: 12,
   },
   tagText: {
     color: "#FFFFFF",
     fontSize: 11,
     fontWeight: "bold",
-    letterSpacing: 0.5,
   },
   nameText: {
     color: "#FFFFFF",
@@ -196,13 +178,13 @@ const styles = StyleSheet.create({
     color: "#8A8A93",
     fontSize: 16,
     marginTop: 4,
+    marginBottom: 16,
   },
-  taglineText: {
+  bioText: {
     color: "#CCCCCC",
     fontSize: 14,
     fontStyle: "italic",
     textAlign: "center",
-    marginTop: 12,
     lineHeight: 20,
   },
   detailsBox: {
@@ -221,40 +203,15 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "bold",
-    marginTop: 14,
+    marginTop: 10,
   },
   itemDetail: {
     color: "#CCCCCC",
     fontSize: 14,
-    marginLeft: 4,
+    marginLeft: 8,
     marginTop: 4,
     lineHeight: 20,
-  },
-  bioInput: {
-    backgroundColor: "#0F0F11",
-    color: "#FFFFFF",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#2C2C2E",
-    padding: 12,
-    marginTop: 8,
-    fontSize: 14,
-    minHeight: 80,
-    textAlignVertical: "top",
-  },
-  saveButton: {
-    backgroundColor: "#E53E3E",
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: "center",
-    marginTop: 16,
-  },
-  saveButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 13,
-    letterSpacing: 0.5,
   },
 });
