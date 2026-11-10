@@ -24,24 +24,6 @@ const defaultProfile: MemberProfile = {
   leisure: "reading novel and manga, watching anime, and playing games",
 };
 
-/*
-  Set this to your API's base URL to enable profile loading.
-  The screen sends a GET request to:
-  {API_BASE_URL}/members/{memberId}
-
-  Expected JSON:
-  {
-    "member": {
-      "id": "2",
-      "name": "Rod Christian",
-      "role": "Midlaner",
-      "tagline": "...",
-      "bio": "...",
-      "game": "CS2",
-      "leisure": "..."
-    }
-  }
-*/
 export default function Member2Profile() {
   const { memberId: routeMemberId } = useLocalSearchParams<{
     memberId?: string | string[];
@@ -102,12 +84,10 @@ export default function Member2Profile() {
       style={styles.container}
       contentContainerStyle={styles.content}
     >
-      {/* Back Button to Team Dashboard */}
       <Link href="/" style={styles.backButton}>
         <Text style={styles.backButtonText}>⬅️ BACK TO DASHBOARD</Text>
       </Link>
 
-      {/* Profile Info Card */}
       <View style={styles.profileCard}>
         <Pressable
           style={styles.tagBox}
@@ -134,7 +114,6 @@ export default function Member2Profile() {
         {error ? <Text style={styles.bioText}>{error}</Text> : null}
       </View>
 
-      {/* Details Box */}
       <View style={styles.detailsBox}>
         <Text style={styles.sectionTitle}>HOBBIES &amp; INTERESTS</Text>
 

@@ -15,11 +15,8 @@ import {
   View,
 } from "react-native";
 
-// ==========================================
-// ⚙️ UPDATE THIS BASELINE DATA FOR EACH MEMBER
-// ==========================================
 const defaultProfile: MemberProfile = {
-  id: "5", // Change ID accordingly (e.g., "2", "3", "4"...)
+  id: "5",
   name: "kyle bendanillo",
   role: "hard support",
   tagline:
@@ -37,7 +34,6 @@ export default function MemberProfileViewer() {
     ? routeMemberId[0]
     : routeMemberId || defaultProfile.id;
 
-  // State Management
   const [profile, setProfile] = useState<MemberProfile>({
     ...defaultProfile,
     id: requestedId,
@@ -47,7 +43,6 @@ export default function MemberProfileViewer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Data Fetching Lifecycle
   useEffect(() => {
     if (!MEMBER_API_BASE_URL) return;
 
@@ -83,25 +78,21 @@ export default function MemberProfileViewer() {
     return () => controller.abort();
   }, [requestedId]);
 
-  // Handler functions
   const toggleFavorite = () => {
     setIsFavorite((prev) => !prev);
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Navigation Layer */}
       <Link href="/" style={styles.backButton}>
         <Text style={styles.backButtonText}>⬅️ BACK TO DASHBOARD</Text>
       </Link>
 
-      {/* Loading & Error Status Indicators */}
       {loading && (
         <ActivityIndicator size="large" color="#E53E3E" style={styles.loader} />
       )}
       {error ? <Text style={styles.errorText}>⚠️ {error}</Text> : null}
 
-      {/* Profile Header Details Layout */}
       <View style={styles.profileCard}>
         <Pressable
           style={[styles.tagBox, isFavorite && styles.tagBoxActive]}
@@ -119,7 +110,6 @@ export default function MemberProfileViewer() {
         <Text style={styles.taglineText}>"{profile.tagline}"</Text>
       </View>
 
-      {/* Editable Management Box */}
       <View style={styles.detailsBox}>
         <Text style={styles.sectionTitle}>BIO & PREFERENCES</Text>
 
