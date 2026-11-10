@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import {
@@ -28,32 +29,31 @@ const defaultProfile: MemberProfile = {
 };
 
 export default function MemberProfileViewer() {
-  const { memberId: routeMemberId } = useLocalSearchParams < {
-    memberId ? : string | string[];
-  } > ();
-  const requestedId = Array.isArray(routeMemberId) ?
-    routeMemberId[0] :
-    routeMemberId || defaultProfile.id;
-  
-  // State Management
-  const [profile, setProfile] = useState < MemberProfile > ({
+  const { memberId: routeMemberId } = useLocalSearchParams<{
+    memberId?: string | string[];
+  }>();
+  const requestedId = Array.isArray(routeMemberId)
+    ? routeMemberId[0]
+    : routeMemberId || defaultProfile.id;
+
+  const [profile, setProfile] = useState<MemberProfile>({
     ...defaultProfile,
     id: requestedId,
   });
+  const [bio, setBio] = useState(defaultProfile.bio);
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
-  // Data Fetching Lifecycle
+
   useEffect(() => {
     if (!MEMBER_API_BASE_URL) return;
-    
+
     const controller = new AbortController();
-    
+
     async function loadProfile() {
       setLoading(true);
       setError("");
-      
+
       try {
         const nextProfile = await fetchMemberProfile(
           requestedId,
@@ -61,6 +61,7 @@ export default function MemberProfileViewer() {
           controller.signal,
         );
         setProfile(nextProfile);
+        setBio(nextProfile.bio);
       } catch (requestError) {
         if (
           requestError instanceof Error &&
@@ -74,16 +75,15 @@ export default function MemberProfileViewer() {
         }
       }
     }
-    
+
     loadProfile();
     return () => controller.abort();
   }, [requestedId]);
-  
-  // Handler functions
+
   const toggleFavorite = () => {
     setIsFavorite((prev) => !prev);
   };
-  
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Navigation Layer */}
@@ -125,8 +125,15 @@ export default function MemberProfileViewer() {
         <Text style={styles.itemTitle}>📖 Leisure Activities:</Text>
         <Text style={styles.itemDetail}>{profile.leisure}</Text>
 
-        <Text style={styles.itemTitle}>📝 Profile Bio:</Text>
-        <Text style={styles.itemDetail}>{profile.bio}</Text>
+        <Text style={styles.itemTitle}>♡ BIO:</Text>
+        <TextInput
+          style={styles.itemDetail}
+          value={bio}
+          onChangeText={setBio}
+          multiline
+          placeholder="Write a short bio"
+          accessibilityLabel="Edit bio"
+        />
       </View>
     </ScrollView>
   );
