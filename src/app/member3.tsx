@@ -22,7 +22,7 @@ import {
 const defaultProfile: MemberProfile = {
   id: "3", // Change ID accordingly (e.g., "2", "3", "4"...)
   name: "ALLAN REY LAPECEROS",
-  role: "SOFT SUPPORT",
+  role: "OFFLANER",
   tagline:" I hold the hardest lane alone, so my team can shine. I don't chase kills, I create space and win wars.",
   bio: "Hard me, Harder me.",
   game: "Ros, Mobile Legend.",
