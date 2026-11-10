@@ -1,3 +1,8 @@
+import {
+  fetchMemberProfile,
+  MEMBER_API_BASE_URL,
+  type MemberProfile,
+} from "@/utils/member-api";
 import { Link, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -8,11 +13,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import {
-  fetchMemberProfile,
-  MEMBER_API_BASE_URL,
-  type MemberProfile,
-} from "@/utils/member-api";
 
 const defaultProfile: MemberProfile = {
   id: "1",
@@ -102,7 +102,9 @@ export default function MemberProfileViewer() {
         <Text style={styles.roleText}>{profile.role}</Text>
 
         <Text style={styles.bioText}>{profile.tagline}</Text>
-        {loading ? <Text style={styles.bioText}>Loading profile...</Text> : null}
+        {loading ? (
+          <Text style={styles.bioText}>Loading profile...</Text>
+        ) : null}
         {error ? <Text style={styles.bioText}>{error}</Text> : null}
       </View>
 
